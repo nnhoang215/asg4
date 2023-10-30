@@ -1,14 +1,13 @@
-<?php echo '<p>Establishing a connection to an Oracle database.</p>';
+<html>
+ <head>
+  <title>Your ballot</title>
+ </head>
+ <body>
+ <?php echo '<p>Establishing a connection to an Oracle database.</p>';
 
 session_start();
 
-if (isset($_GET["submit"])) {
-    $_SESSION["voter_name"] = $_GET["fullname"];
-    $_SESSION["postcode"] = $_GET["postcode"];
-    echo $_SESSION["voter_name"];
-    echo $_SESSION["postcode"];
-}
-
+// establish a database connection to your Oracle database.
 $username = 's3926555';
 $password = 'S3926555@rmit.edu.vn'; //DO NOT enter your RMIT password
 $servername = 'talsprddb01.int.its.rmit.edu.au';
@@ -47,21 +46,34 @@ else
 
 
     // testing SELECT SQL from movie table
-    $stid = oci_parse($conn, "SELECT * FROM voterregistry WHERE firstname='" . $_SESSION["voter_name"] . "' AND postaddress=" . $_SESSION["postcode"] . "");
-    // $stid = oci_parse($conn, "SELECT * FROM voterregistry WHERE firstname='Joe Bloggs' AND postaddress=3000");
-    // $stid = oci_parse($conn, "SELECT * FROM voterregistry");
-    $result = oci_execute($stid);
-    // Populate the table with data fetched from the Oracle table
-    while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {}
-    $num_rows = oci_num_rows($stid);
-    if ($num_rows < 1) {
-        echo "No results";
-        $_SESSION["found_voter"] = false;
-        header('Location: ./index.php');
-    } else {
-        $_SESSION["found_voter"] = true;
-        header('Location: ./ballot.php');
+    $stid = oci_parse($conn, 'SELECT * FROM issuancerecord');
+    oci_execute($stid);
+
+    echo "<table border='1'>\n";
+
+    $ncols = oci_num_fields($stid);
+
+    echo "<tr>";
+
+    // Build HTML table Header using fieldnames from Oracle Table
+    for ($i = 1; $i <= $ncols; $i++) {
+        $column_name  = oci_field_name($stid, $i);
+        $column_type  = oci_field_type($stid, $i);
+
+        echo "<td><b>$column_name";
+        echo " ($column_type)</b></td>";
     }
+    echo "</tr>\n";
+
+    // Populate the table with data fetched from the Oracle table
+    while ($row = oci_fetch_array($stid, OCI_ASSOC+OCI_RETURN_NULLS)) {
+        echo "<tr>\n";
+        foreach ($row as $item) {
+            echo "    <td>" . ($item !== null ? htmlentities($item, ENT_QUOTES) : "&nbsp;") . "</td>\n";
+        }
+        echo "</tr>\n";
+    }
+    echo "</table>\n";
 }
 
 oci_close($conn);

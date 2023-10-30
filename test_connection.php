@@ -5,6 +5,8 @@
  <body>
  <?php echo '<p>Establishing a connection to an Oracle database.</p>';
 
+session_start();
+unset($_SESSION["found_voter"]);
 
 // establish a database connection to your Oracle database.
 $username = 's3926555';

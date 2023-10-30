@@ -63,9 +63,15 @@
     </div>
   </nav>
   <div style="font-size: 200%; font-weight: bold;">Computerized Voting Platform for Australian citizens</div>
+  <?php
+    session_start();
+    if ($_SESSION["found_voter"] == false) {
+      echo "VOTER NOT FOUND, TRY AGAIN";
+    }
+  ?>
   <main>
     <div style="display: flex; flex-wrap: wrap; flex-direction: row; justify-content: center; gap: 10px;">
-      <form class="preliminary-questions" action="index.php" method="get">
+      <form class="preliminary-questions" action="prelimform.php" method="get">
         <div class="field-input">
           <label for="fullname">Fullname</label>
           <input id="fullname" type="text" name="fullname" placeholder="Enter your full name here...">
@@ -93,12 +99,7 @@
       </form>
     </div>
     <p>
-      <?php
-      if (isset($_GET["submit"])) {
-        $v1 = $_GET["fullname"];
-        echo "<h1>this is: $v1<h/1>";
-      }
-      ?>
+      
     </p>
   </main>
 </body>
