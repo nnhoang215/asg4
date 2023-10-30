@@ -95,7 +95,7 @@
 
         <div class="field-input">
           <label for="hasVoted">Have you voted in this election before (Tick if already voted)</label>
-          <input id="hasVoted" type="checkbox" value="yes">
+          <input id="hasVoted" type="checkbox" name="hasVoted" value="yes">
         </div>
             <button type="submit" name="submit" style="background-color: blue; color: white; font-size: 1.5rem;">Submit</button>
       </form>

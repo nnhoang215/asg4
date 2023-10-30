@@ -3,6 +3,10 @@
 session_start();
 
 if (isset($_GET["submit"])) {
+    if ($_GET["hasVoted"] == "yes") {
+        header('Location: ./index.php');
+        exit();
+    }
     $_SESSION["voter_name"] = $_GET["fullname"];
     $_SESSION["postcode"] = $_GET["postcode"];
     echo $_SESSION["voter_name"];
@@ -59,6 +63,7 @@ else
         $_SESSION["found_voter"] = false;
         header('Location: ./index.php');
     } else {
+        $stid = oci_parse($conn, "SELECT * FROM issuancerecord WHERE firstname='" . $_SESSION["voter_name"] . "' AND postaddress=" . $_SESSION["postcode"] . "");
         $_SESSION["found_voter"] = true;
         header('Location: ./ballot.php');
     }
